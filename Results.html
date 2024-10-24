@@ -1,0 +1,49 @@
+{{ block title }}
+    Results for Round {{ player.round_number }}
+{{ endblock }}
+
+{{ block content }}
+<div class="card">
+    <div class="card-body">
+        <h4>Round Summary</h4>
+        <ul>
+            <li>The true state was: <strong>{{ true_state }}</strong></li>
+            <li>Player 1's message was: <strong>{{ p1_message }}</strong></li>
+            <li>Player 2's belief was: <strong>{{ p2_belief }}</strong></li>
+        </ul>
+
+        <h4>Your Points</h4>
+        <p>You earned <strong>{{ points }}</strong> points this round.</p>
+        <p>Your total points so far: <strong>{{ total_points }}</strong></p>
+
+        <div class="alert alert-info">
+            <h5>Reminder of Payoff Structure</h5>
+            <h6>In situation X:</h6>
+            <ul>
+                <li>If Person 1 chooses X and Person 2 chooses X: 20 points each</li>
+                <li>If Person 1 chooses X and Person 2 chooses Y: 10 points each</li>
+                <li>If Person 1 chooses Y and Person 2 chooses X: 10 points each</li>
+                <li>If Person 1 chooses Y and Person 2 chooses Y: 0 points each</li>
+            </ul>
+
+            <h6>In situation Y:</h6>
+            <ul>
+                <li>If Person 1 chooses X and Person 2 chooses X: Person 1 gets 10, Person 2 gets 0</li>
+                <li>If Person 1 chooses X and Person 2 chooses Y: Person 1 gets 0, Person 2 gets 10</li>
+                <li>If Person 1 chooses Y and Person 2 chooses X: Person 1 gets 20, Person 2 gets 10</li>
+                <li>If Person 1 chooses Y and Person 2 chooses Y: Person 1 gets 10, Person 2 gets 20</li>
+            </ul>
+        </div>
+
+        {{ if player.round_number == C.NUM_ROUNDS }}
+            <h4>Game Complete!</h4>
+            <p>Your final total score: <strong>{{ total_points }}</strong> points</p>
+        {{ else }}
+            <button class="btn btn-primary" onclick="window.location.href = ''">
+                Continue to Next Round
+            </button>
+        {{ endif }}
+    </div>
+</div>
+{{ endblock }}
+

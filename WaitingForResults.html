@@ -1,0 +1,16 @@
+{{ block title }}
+    Round {{ player.round_number }} Complete
+{{ endblock }}
+
+{{ block content }}
+    <div class="card">
+        <div class="card-body text-center">
+            <h4>You have completed round {{ player.round_number }} of {{ C.NUM_ROUNDS }}</h4>
+            <div class="spinner-border text-primary mt-3 mb-3" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="lead">Please wait patiently while other participants finish this round.</p>
+            <p class="text-muted">Your results will be displayed once everyone has completed the round.</p>
+        </div>
+    </div>
+{{ endblock }}

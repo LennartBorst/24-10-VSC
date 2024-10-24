@@ -1,0 +1,79 @@
+{{ block title }}
+    Communication Game
+{{ endblock }}
+
+{{ block content }}
+    <div id="game-container">
+        <div id="role-display"></div>
+        <div id="state-display"></div>
+        <div id="message-interface"></div>
+        <div id="belief-interface"></div>
+    </div>
+{{ endblock }}
+
+{{ block scripts }}
+<script>
+    function liveRecv(data) {
+        if (data.type === 'true_state') {
+            document.getElementById('state-display').innerHTML =
+                `<p>The state of the world is: ${data.state}</p>`;
+            if (js_vars.is_player1) {
+                document.getElementById('message-interface').innerHTML = `
+                    <button onclick="sendMessage('X')">Send Message: State is X</button>
+                    <button onclick="sendMessage('Y')">Send Message: State is Y</button>
+                `;
+            }
+        }
+        else if (data.type === 'received_message') {
+            document.getElementById('state-display').innerHTML =
+                `<p>Player 1 says the state is: ${data.message}</p>`;
+            showBeliefInput();
+        }
+        else if (data.type === 'show_belief_input') {
+            showBeliefInput();
+        }
+        else if (data.type === 'belief_submitted') {
+            document.getElementById('belief-interface').innerHTML =
+                '<p>Your answer has been submitted. Waiting for other player...</p>';
+        }
+    }
+
+    function sendMessage(message) {
+        liveSend({
+            'type': 'send_message',
+            'message': message
+        });
+        document.getElementById('message-interface').innerHTML =
+            '<p>Message sent!</p>';
+    }
+
+    function submitBelief(belief) {
+        liveSend({
+            'type': 'submit_belief',
+            'belief': belief
+        });
+    }
+
+    function showBeliefInput() {
+        document.getElementById('belief-interface').innerHTML = `
+            <div class="mt-4">
+                <p><strong>What do you think was the true state in this round?</strong></p>
+                <button class="btn btn-primary mr-2" onclick="submitBelief('X')">State was X</button>
+                <button class="btn btn-primary" onclick="submitBelief('Y')">State was Y</button>
+            </div>
+        `;
+    }
+
+    // Set up initial display
+    document.getElementById('role-display').innerHTML =
+        `<p>You are Player ${js_vars.is_player1 ? '1' : '2'}</p>`;
+
+    // Request initial state if player 1
+    if (js_vars.is_player1) {
+        liveSend({'type': 'load'});
+    } else {
+        document.getElementById('state-display').innerHTML =
+            '<p>Waiting for Player 1\'s message...</p>';
+    }
+</script>
+{{ endblock }}
